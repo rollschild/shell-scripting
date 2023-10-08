@@ -1,0 +1,4 @@
+total 12
+drwxr-xr-x 2 root root 4096 Oct  8 13:02 .
+drwxr-xr-x 3 root root 4096 Jun  5  2021 ..
+lrwxrwxrwx 1 root root   65 Oct  8 13:02 env -> /nix/store/y9gr7abwxvzcpg5g73vhnx1fpssr5frr-coreutils-9.3/bin/env
