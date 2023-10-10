@@ -30,7 +30,7 @@
   - **inline input redirection**
     - `<<`
     - needs a text marker
-    ```console
+    ```sh
     wc << <marker>
     - <text>
     - <marker>
@@ -60,7 +60,7 @@
     - default is `0`
   - `variable=$(echo "options; expression" | bc)`
   - able to do inline input redirection
-    ```console
+    ```sh
     variable=$(bc << EOF
     options
     statements
@@ -76,3 +76,65 @@
   - by default, the script exits with the exit status of the last command in the script
     - overwrite that by manually `exit <exit_code>`
     - if `<exit_code>` is larger than `255`, use modulo `<exit_code> % 256`
+
+## Structured Commands
+
+- `if-then`
+  ```sh
+  if command # checking if exit status of `command` is zero
+  then
+      commands
+  fi
+  ```
+  - alternatively, `if command; then`
+- `if-then-else`
+  ```sh
+  if command
+  then
+      commands
+  else
+      commands
+  fi
+  ```
+- `if-then` can _ONLY_ evaluate the condition of a command's exit code
+- to evaluate other conditions, use `test`
+  - `test` - test whether a variable has content
+  ```sh
+  if test condition
+  then
+      commands
+  fi
+  ```
+- `if [ condition ]` - an alternative way to test a condition without `test`
+  - there _must_ be a space after the `[` and before the `]`
+- Numeric comparisons
+  - bash can _only_ handle integer comparisons
+- String comparisons
+  - use _escaped_ `\>` and `\<`
+  - otherwise they are interpreted as _redirections_
+  - when comparing orders, `\<` and `\>` have _different_ directions than `sort`
+  - `sort` puts lowercases first
+- `if [ -n $string ]` - test whether `$string` is non-zero in length
+- `if [ -z $string ]` - test whether `$string` is zero in length
+- `-nt`/`-ot`
+  - files newer/older than the other?
+  - should check whether file exists first
+- Compound testing
+  - `if [ condition1 ] && [ condition2 ]`
+  - `if [ condition1 ] || [ condition2 ]`
+- Advanced `if-then`
+  - Run a command in **subshell** using `(command)`
+  - Math expressions in `((expression))`
+  - Advanced string handling in `[[...]]`
+    - allows for **pattern matching**
+- `case`
+
+  ```sh
+  case variable in
+  pattern1 | pattern2) commands1;;
+  pattern3) commands2;;
+  *) default commands;;
+  esac
+  ```
+
+-
