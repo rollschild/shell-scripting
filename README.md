@@ -137,4 +137,56 @@
   esac
   ```
 
+- `for`
+
+  ```sh
+  for var in list # separated by space
+  do
+    commands
+  done
+  ```
+
+- `IFS` - **Internal Field Separator**
+  - special environment variable
+  - defines a _list_ of chars used by bash as field separators
+  - Default field separators:
+    - a space
+    - a tab
+    - a newline
+  - REMEMBER to reset it afterwards!
+    ```sh
+    IFS.OLD=$IFS
+    IFS=$'\n'
+    ...
+    IFS=$IFS.OLD
+    ```
+  - specify more than one character: `IFS="$'\n':;"`
+- **File globbing**
+  - the process of producing filenames/pathnames that match a specified wildcard
+- C-style `for` loop
+  - `for (( variable assignment ; condition ; iteration process ))`
+- `while`
+
+  ```sh
+  while test command
+  do
+      other commands
+  done
+  ```
+
+  - terminates when the exit status of `test command` changes
+  - multiple test commands _are_ allowed - `while` terminates only when the exit status of the last test command changes
+
+- `until`
+  - opposite of `while`
+  - terminates when exit status of test command goes from non-zero to zero
+- `break`
+  - `break n` - the level of loop to break out of
+  - by default `n` is `1`
+- `continue`
+  - ` continue n`
+- Processing the output of a loop
+  - `done > output.txt`
+  - `done < input.txt`
+  - `done | sort`
 -
