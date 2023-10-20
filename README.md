@@ -189,4 +189,71 @@
   - `done > output.txt`
   - `done < input.txt`
   - `done | sort`
--
+
+## User Inputs
+
+- `$0` - the script's name
+  - _with path_
+  - to use only the script name, use the `basename` command
+    - `$(basename $0)`
+- up to `$9` for the ninth parameter
+- for more parameters, use `${10}`, `${11}`, etc
+- To test parameters, use `-n`
+  - `if [ -n "$1" ]`
+
+### Special Parameter Variables
+
+- `$#` - number of command-line parameters
+- `if [ $# -eq 1 ]`
+- `${!#}` - get the value of the last parameter
+  - `?` _CANNOT_ be used in `{}`
+  - so it's _NOT_ `${?#}`
+- To grab _all_ parameters:
+  - `$*` - all parameters as a single word
+  - `$@` - all parameters as separate words in the _same_ string
+
+### Shifty
+
+- `shift`
+  - moves each parameter variable one position to the left by default
+  - `shift <pos>`
+- use `--` to separate options and parameters
+  - `--` indicates end of the option list
+  - note: the parameters have no special relationship with the options
+- `getopt`
+  - `getopt optstring paramters`
+  - `optstring` - list of valid option letters
+    - colon `:` after the letter which requires a value
+    - `q` - ignore error messages
+    - _NOT_ working well with parameter values with spaces or quotation marks
+      - use `getopts`
+- `set`
+  - `set --` - replace commandline parameter variables with the values specified by `set`
+    - used with `$@`
+- `getopts`
+  - works on existing shell parameter variables _sequentially_
+  - `getopts optstring variable`
+  - prepend `optstring` with `:` to suppress error messages
+  - uses 2 env variables:
+    - `OPTARG` - parameter value
+    - `OPTIND` - value of the current location within the parameter list where `getopts` left off
+      - incremented by one every time
+  - bundles _any_ undefined option into a single output, `?`
+
+### Getting User Input
+
+- `read`
+  - either from stdin or file descriptor
+  - put data read into a variable
+  - if _no_ variable specified, data stored in the special env variable `REPLY`
+  - `REPLY`: contains _all_ data entered in the input
+  - `read -p` read with a prompt
+  - `read -s` in silent mode
+    - no input on display
+- `read` from a file
+  - a single line of a time
+
+### Timing out
+
+- use `-t` to specify a timer
+- if expired, exit status is non-zero
