@@ -257,3 +257,89 @@
 
 - use `-t` to specify a timer
 - if expired, exit status is non-zero
+
+### Presenting Data
+
+#### File Descriptors
+
+- `STDIN` - `0`
+  - overwritten/redirected by `<`
+- `STDOUT` - `1`
+  - redirected by `>` or `>>`
+- `STDERR` - `2`
+  - `2>` - redirecting `STDERR` _only_
+  - `1> <file_for_data> 2> <file_for_err>`
+  - `&>` - redirect _both_ `STDERR` and `STDOUT` to the _same_ file
+    - error messages have a _higher_ priority than stdout
+
+#### Redirecting output
+
+- precede the file descriptor with `&`
+  - `>&2`
+- To permanently redirect (for the duration of current script) - `exec`
+  - `exec 1>testout`
+- `exec` starts a _new_ shell
+
+#### Redirecting input
+
+- `exec 0< testinput`
+
+#### Creating custom redirection
+
+- file descriptors `3` through `8`
+- redirecting and resetting `STDIN`:
+
+```sh
+exec 6<&0
+#...
+exec 0<&6
+```
+
+#### Creating read/write file descriptor
+
+- open a single file descriptor for _both_ input _and_ output
+- `exect 3<> testfile`
+- _NOTE_!
+  - when reading from and writing to the same file, the shell maintains an internal pointer!
+
+#### Closing file descriptors
+
+- to close, redirect to `&-`
+  - `exec 3>&-`
+
+#### Listing Open File Descriptors
+
+- `lsof` - list _all_ open file descriptors on the entire Linux system
+  - `lsof -p` - by `PID`
+- `$$` - current `PID`
+
+#### Suppressing Command Output
+
+- redirect to the `null` file
+- `/dev/null`
+  - can also be used for input redirection as an input file
+    - to quickly remove data from an existing file without having to remove the file and re-create it
+    - `cat /dev/null > file_to_be_cleared`
+
+#### Temporary Files
+
+- `/tmp` for temp files
+- auto cleaned up at bootup
+- `mktemp` - create a unique temp file
+  - `mktemp testfile.XXXXXX`
+  - by default in the current location
+- `mktemp -t testfile.XXXXXX`
+  - create in `/tmp`
+- `mktemp -d dir.XXXXXX`
+  - create temp directory
+
+#### Logging Messages
+
+- `tee`
+  - sends data from `STDIN`
+  - sends data to _both_:
+    - `STDOUT`
+    - a file
+  - by default overwrites the file
+  - `-a` to append
+-
