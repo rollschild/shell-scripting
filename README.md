@@ -443,4 +443,64 @@ exec 0<&6
     - `$HOME/.bash_profile`
     - `$HOME/.bash_login`
     - `$HOME/.profile`
--
+
+### Functions
+
+```sh
+function name {
+    commands
+}
+
+# or,
+name() {
+commands
+}
+```
+
+- To call a function, just specify the function name on a line
+- Redefining a function name will override the original function definition
+- Bash shell treats functions like mini-scripts
+  - with an exit status
+- exit status:
+  - by default, the exit status returned by the last command in the function
+  - `$?` - check the exit status
+- Use `return` to exit the function with a specific exit status
+  - NOTE:
+    - Remember to retrieve the return value _as soon as_ the function completes
+    - Remember exit status must be `0` - `255`
+  - cannot return a string
+- Capture output of a function to a shell variable
+  - `result=$(func)`
+- Passing parameters to function
+  - inside the function, `$0`, `$1`, `$2`, etc
+  - `$0` is name of function
+  - `$#` is number of parameters passed to the function - excluding the function itself
+- Parameters passed to the script are _NOT_ the same as those passed to the function within!
+  - Need to manually pass the parameters to the function!
+- Scope of variables
+  - **global** by default _everywhere_
+  - `local`
+
+#### Passing arrays to functions
+
+- passing the array variable as a function parameter - it would _NOT_ work!
+  - only the first element of the array will be picked up
+  - you _MUST_ disassemble the array variable into individual elements!
+    - use those individual as function parameters
+
+#### Returning arrays from functions
+
+- function uses `echo` to output _individual_ array values in the proper order
+  - the script reassembles back into a new array
+
+#### Creating a library
+
+- `source` - the key
+  - executes commands within the current shell context instead of creating a new shell
+  - used to run the library file script inside your shell script
+  - the **dot operator** - shortcut alias of `source`
+    - `. ./<script>`
+
+#### Using functions on CLI
+
+- `$ function <func_name> { <command>; }`
